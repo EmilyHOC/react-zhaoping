@@ -2,6 +2,9 @@ import React, {Component} from 'react';
 import {Button, InputItem, List, NavBar, Radio, WhiteSpace, WingBlank} from "antd-mobile";
 import Logo from "../../components/logo/logo";
 import ListItem from "antd-mobile/es/list/ListItem";
+import {connect} from 'react-redux';
+import {register} from "../../redux/actions";
+import {Redirect} from "react-router-dom";
 
 class Register extends Component {
     state={
@@ -11,7 +14,7 @@ class Register extends Component {
         type:'dashen'
     };
     register = ()=>{
-        console.log(this.state)
+        this.props.register(this.state)
     };
     handleChange =(name,value)=>{
         this.setState({
@@ -23,12 +26,18 @@ class Register extends Component {
     };
     render() {
         const {type}=this.state;
+        const {msg,redirectTo}=this.props.user;
+        //有值需要重定向到指定的路由
+        if(redirectTo){
+            return <Redirect to={redirectTo}></Redirect>
+        }
         return (
             <div>
                 <NavBar>招&nbsp;聘</NavBar>
                 <Logo/>
                 <WingBlank size="md">
                     <List>
+                        {msg?<div className='error-msg'>{msg}</div>:null}
                         <InputItem placeholder='输入用户名' onChange={val=>this.handleChange('username',val)}>用户名:</InputItem>
                         <WhiteSpace/>
                         <InputItem placeholder='输入密码' type="password" onChange={val=>this.handleChange('password',val)}>密&nbsp;&nbsp;&nbsp;码:</InputItem>
@@ -51,4 +60,4 @@ class Register extends Component {
     }
 }
 
-export default Register;
+export default connect(state=>({user:state.user}),{register})(Register);
