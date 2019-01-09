@@ -39,7 +39,7 @@ class Login extends Component {
                         <InputItem placeholder='输入密码' type="password" onChange={val=>this.handleChange('password',val)}>密&nbsp;&nbsp;&nbsp;码:</InputItem>
                         <WhiteSpace/>
                         <WhiteSpace/>
-                        <Button type="primary" onClick={this.login}>注册</Button>
+                        <Button type="primary" onClick={this.login}>登陆</Button>
                         <WhiteSpace/>
                         <Button onClick={this.toRegister}>还没有账户</Button>
                     </List>

@@ -10,11 +10,21 @@ class HeaderSelector extends Component {
             this.headerList.push({text,icon:require(`../../assets/images/${text}.png`)})
         }
     }
+    state={
+        icon:null
+    }
+    selectHeader=({icon,text})=>{
+        //更新当前组件的状态
+        this.setState({icon});
+        //更新父组件的状态
+        this.props.setHeader(text)
+    }
     render() {
-        const listHeader='请选择头像';
+        const {icon}=this.state;
+        const gridHeader=icon?<p>已选择头像：<img src={icon} alt="header"/></p>:'请选择头像';
         return (
-            <List renderHeader={()=>listHeader}>
-                <Grid columnNum={5} data={this.headerList}/>
+            <List renderHeader={()=>gridHeader}>
+                <Grid columnNum={5} data={this.headerList} onClick={this.selectHeader}/>
             </List>
         );
     }

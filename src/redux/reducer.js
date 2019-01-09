@@ -3,7 +3,8 @@
 * */
 /*产生一个新的状态*/
 import {combineReducers} from "redux";
-import {AUTH_SUCCESS, ERROR_MSG} from "./action-types";
+import {AUTH_SUCCESS, ERROR_MSG, RECEIVE_USER, RESET_USER} from "./action-types";
+import {getRedirectPath} from "../utils";
 /*产生user状态的reducer*/
 const initUser={
     username:'',/*后台是不会返回密码的*/
@@ -13,12 +14,16 @@ const initUser={
 }
 //产生user状态的reducer
 function user(state = initUser,action){
-    switch(action.type){
-        case AUTH_SUCCESS://data是user
-            return {...action.data,redirectTo: '/'}
+    switch(action.type){//data是user
+        case AUTH_SUCCESS:
+            const redirectTo=getRedirectPath(action.data.type,action.data.header)
+            return {...action.data,redirectTo: redirectTo}
         case ERROR_MSG://data是msg
             return {...state,msg:action.data}
-
+        case RECEIVE_USER:
+            return action.data;
+        case RESET_USER:
+            return {...initUser,msg:action.data}//必然会导致进入登陆界面
         default:
             return state
     }
@@ -29,3 +34,4 @@ export default combineReducers({
 })
 
 //向外暴露的状态的结构:{user:{}}
+
