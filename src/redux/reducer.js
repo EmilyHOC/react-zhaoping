@@ -3,7 +3,7 @@
 * */
 /*产生一个新的状态*/
 import {combineReducers} from "redux";
-import {AUTH_SUCCESS, ERROR_MSG, RECEIVE_USER, RESET_USER} from "./action-types";
+import {AUTH_SUCCESS, ERROR_MSG, RECEIVE_USER, RESET_USER,RECEIVE_USER_LIST} from "./action-types";
 import {getRedirectPath} from "../utils";
 /*产生user状态的reducer*/
 const initUser={
@@ -28,9 +28,19 @@ function user(state = initUser,action){
             return state
     }
 }
+//产生userlist状态的reducer
+const initUserList=[];
+function userList(state=initUserList,action){
+    switch (action.type) {
+        case RECEIVE_USER_LIST:
+            return action.data
+        default:
+            return state
+    }
+}
 
 export default combineReducers({
-    user
+    user,userList
 })
 
 //向外暴露的状态的结构:{user:{}}

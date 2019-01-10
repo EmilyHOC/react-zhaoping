@@ -1,12 +1,52 @@
 import React, {Component} from 'react';
 import {Switch,Route,Redirect} from 'react-router-dom'
+
 import LaobanInfo from '../laoban-info/laoban-info'
 import DashenInfo from "../dashen-info/dashen-info";
+import Dashen from '../dashen/dashen';
+import Laoban from '../laoban/laoban';
+import Message from '../message/Message';
+import Personal from '../personal/Personal';
+import NavFooter from '../../components/nav-footer/nav-footer.jsx';
+
 import {connect} from 'react-redux';
 import Cookies from 'js-cookie';
+import {NavBar} from "antd-mobile";
 import {getRedirectPath} from '../../utils/index'
 import {getUser} from "../../redux/actions";
+import NotFound from "../../components/not-found/not-found";
+
+
 class Main extends Component {
+    //包含所有组建的信息
+    navList=[{
+        path:'/laoban',
+        component:Laoban,
+        title:'大神列表',
+        icon:'dashen',
+        text:'大神'
+    },{
+        path:'/dashen',
+        component:Dashen,
+        title:'老板列表',
+        icon:'laoban',
+        text:'老板'
+
+    },{
+        path:'/message',
+        component:Message,
+        title:'消息列表',
+        icon:'message',
+        text:'消息'
+    },
+        {
+            path:'/personal',
+            component:Personal,
+            title:'用户中心',
+            icon:'personal',
+            text:'个人'
+        }
+    ];
     componentDidMount() {
         //登陆过（cookie中有userid）,但没有登陆（redux管理的user中没有_id）发请求获取对应的user
         const userid=Cookies.get('userid');
@@ -39,12 +79,32 @@ class Main extends Component {
                 return <Redirect to={path}/>
             }
         }
+        const {navList} =this;
+        const path=this.props.location.pathname;//请求的路径
+        const currentNav=navList.find(nav=>nav.path===path);//得到当前的nav，可能没有
+        if(currentNav){
+            if(user.type==='laoban'){
+                navList[1].hide=true
+            }else{
+                //隐藏数组的第一个
+               navList[0].hide=true
+            }
+        }
+
         return (
             <div>
+                {currentNav?<NavBar className='sticky-header'>{currentNav.title}</NavBar>:null}
                 <Switch>
+                    {
+                        navList.map(nav=><Route path={nav.path} component={nav.component} key={nav.path}/>)
+                    }
                     <Route path='/laobaninfo' component={LaobanInfo}></Route>
                     <Route path='/dasheninfo' component={DashenInfo}></Route>
+                    <Route component={NotFound}/>
                 </Switch>
+                {
+                    currentNav?<NavFooter navList={this.navList}/>:null
+                }
             </div>
         );
     }

@@ -8,4 +8,7 @@ export const reqLogin =(user)=>ajax('/login',user,'POST');
 
 export const reqUpdateUser=(user)=>ajax('/update',user,'POST');
 
-export const reqUser =()=>ajax('/user')
+export const reqUser =()=>ajax('/user');
+
+//获取用户列表
+export const  reqUserList=(type)=>ajax('/userlist',{type});
